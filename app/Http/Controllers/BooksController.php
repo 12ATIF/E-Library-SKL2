@@ -4,16 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Books;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class BookController extends Controller
+class BooksController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // Only admin can create, update, delete books
+        $this->middleware('admin')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
+
     /**
      * Display a listing of the books.
      */
     public function index()
     {
-
-        return view ('books.index');
+        $books = Books::latest()->paginate(10);
+        return view('books.index', compact('books'));
     }
 
     /**
@@ -21,7 +34,7 @@ class BookController extends Controller
      */
     public function create()
     {
-        return view ('books.create');
+        return view('books.create');
     }
 
     /**
@@ -29,7 +42,18 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'publisher' => 'required|string|max:255',
+            'description' => 'required|string',
+            'publication_year' => 'required|integer|min:1800|max:' . date('Y'),
+            'page_count' => 'required|integer|min:1',
+        ]);
 
+        Books::create($request->all());
+
+        return redirect()->route('books.index')
+            ->with('success', 'Buku berhasil ditambahkan.');
     }
 
     /**
@@ -37,7 +61,7 @@ class BookController extends Controller
      */
     public function show(Books $book)
     {
-
+        return view('books.show', compact('book'));
     }
 
     /**
@@ -53,7 +77,18 @@ class BookController extends Controller
      */
     public function update(Request $request, Books $book)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'publisher' => 'required|string|max:255',
+            'description' => 'required|string',
+            'publication_year' => 'required|integer|min:1800|max:' . date('Y'),
+            'page_count' => 'required|integer|min:1',
+        ]);
 
+        $book->update($request->all());
+
+        return redirect()->route('books.index')
+            ->with('success', 'Buku berhasil diperbarui.');
     }
 
     /**
@@ -61,6 +96,9 @@ class BookController extends Controller
      */
     public function destroy(Books $book)
     {
+        $book->delete();
 
+        return redirect()->route('books.index')
+            ->with('success', 'Buku berhasil dihapus.');
     }
 }
