@@ -11,7 +11,7 @@
         <form action="{{ route('books.destroy', $book) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini?')">
             @csrf
             @method('DELETE')
-            <button type="submit" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-red-600">Delete</button>
+            <button type="submit" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-red-600">Hapus</button>
         </form>
         @endif
         

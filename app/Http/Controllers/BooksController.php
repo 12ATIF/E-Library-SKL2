@@ -16,8 +16,8 @@ class BooksController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        // Only admin can create, update, delete books
-        // $this->middleware('admin')->only(['create', 'store', 'edit', 'destroy']);
+        // Aktifkan middleware admin untuk akses CRUD buku
+        $this->middleware('admin')->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
 
     /**
@@ -34,10 +34,7 @@ class BooksController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->role !== 'admin') {
-            return redirect()->route('books.index')
-                ->with('error', 'Anda tidak memiliki akses untuk halaman ini.');
-        }
+        // Middleware admin sudah diaktifkan di constructor, tidak perlu cek lagi
         return view('books.create');
     }
 
@@ -46,11 +43,7 @@ class BooksController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->role !== 'admin') {
-            return redirect()->route('books.index')
-                ->with('error', 'Anda tidak memiliki akses untuk operasi ini.');
-        }
-    
+        // Middleware admin sudah diaktifkan di constructor, tidak perlu cek lagi
         $request->validate([
             'name' => 'required|string|max:255',
             'publisher' => 'required|string|max:255',
@@ -78,11 +71,7 @@ class BooksController extends Controller
      */
     public function edit(Books $book)
     {
-        if (Auth::user()->role !== 'admin') {
-            return redirect()->route('books.index')
-                ->with('error', 'Anda tidak memiliki akses untuk operasi ini.');
-        }
-    
+        // Middleware admin sudah diaktifkan di constructor, tidak perlu cek lagi
         return view('books.edit', compact('book'));
     }
 
@@ -91,11 +80,7 @@ class BooksController extends Controller
      */
     public function update(Request $request, Books $book)
     {
-        if (Auth::user()->role !== 'admin') {
-            return redirect()->route('books.index')
-                ->with('error', 'Anda tidak memiliki akses untuk operasi ini.');
-        }
-    
+        // Middleware admin sudah diaktifkan di constructor, tidak perlu cek lagi
         $request->validate([
             'name' => 'required|string|max:255',
             'publisher' => 'required|string|max:255',
@@ -115,11 +100,7 @@ class BooksController extends Controller
      */
     public function destroy(Books $book)
     {
-        if (Auth::user()->role !== 'admin') {
-            return redirect()->route('books.index')
-                ->with('error', 'Anda tidak memiliki akses untuk operasi ini.');
-        }
-    
+        // Middleware admin sudah diaktifkan di constructor, tidak perlu cek lagi
         $book->delete();
 
         return redirect()->route('books.index')

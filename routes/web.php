@@ -5,12 +5,6 @@ use App\Http\Controllers\BooksController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
 // Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -21,24 +15,27 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Dashboard Route
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
-
-// Books Routes
+// Protected Routes yang memerlukan autentikasi
 Route::middleware('auth')->group(function () {
-    // Semua rute yang memerlukan autentikasi
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Daftarkan route publik
     Route::get('/books', [BooksController::class, 'index'])->name('books.index');
     Route::get('/books/{book}', [BooksController::class, 'show'])->name('books.show');
     
-    // Lakukan pemeriksaan role admin di controller, bukan dengan middleware
-    Route::get('/books/create', [BooksController::class, 'create'])->name('books.create');
-    Route::post('/books', [BooksController::class, 'store'])->name('books.store');
-    Route::get('/books/{book}/edit', [BooksController::class, 'edit'])->name('books.edit');
-    Route::put('/books/{book}', [BooksController::class, 'update'])->name('books.update');
-    Route::delete('/books/{book}', [BooksController::class, 'destroy'])->name('books.destroy');
+    // Daftarkan route admin dengan middleware admin
+    Route::middleware('admin')->group(function() {
+        Route::get('/books/create', [BooksController::class, 'create'])->name('books.create');
+        Route::post('/books', [BooksController::class, 'store'])->name('books.store');
+        Route::get('/books/{book}/edit', [BooksController::class, 'edit'])->name('books.edit');
+        Route::put('/books/{book}', [BooksController::class, 'update'])->name('books.update');
+        Route::delete('/books/{book}', [BooksController::class, 'destroy'])->name('books.destroy');
+    });
 });
 
-// Redirect to books.index by default
 Route::redirect('/', '/books');
 
+// Fallback route
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
+});
