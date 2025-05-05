@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [BooksController::class, 'index'])->name('books.index');
     
     // Rute yang hanya bisa diakses admin
-    Route::middleware('admin')->group(function () {
+    Route::middleware(\App\Http\Middleware\AdminMiddleware::class)->group(function () {
         Route::get('/books/create', [BooksController::class, 'create'])->name('books.create');
         Route::post('/books', [BooksController::class, 'store'])->name('books.store');
         Route::get('/books/{book}/edit', [BooksController::class, 'edit'])->name('books.edit');
