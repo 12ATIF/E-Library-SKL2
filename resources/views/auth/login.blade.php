@@ -31,10 +31,21 @@
                 <h1 class="text-2xl font-bold mb-1">E-Library Admin</h1>
                 <p class="text-gray-500 mb-6">Masuk ke akun admin untuk mengelola perpustakaan</p>
                 
-                <form action="index.html" method="GET" class="space-y-4">
+                @if ($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+                
+                <form action="{{ route('login') }}" method="POST" class="space-y-4">
+                    @csrf
                     <div class="text-left">
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" id="email" name="email" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="admin@example.com">
+                        <input type="email" id="email" name="email" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="admin@example.com" value="{{ old('email') }}">
                     </div>
                     
                     <div class="text-left">
@@ -50,7 +61,7 @@
                 
                 <div class="mt-6 text-sm text-gray-600">
                     Belum punya akun? 
-                    <a href="register.html" class="text-primary hover:underline">Daftar</a>
+                    <a href="{{ route('register') }}" class="text-primary hover:underline">Daftar</a>
                 </div>
             </div>
         </div>

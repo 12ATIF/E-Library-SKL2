@@ -13,30 +13,36 @@
         <p class="text-xs font-medium text-gray-500 mb-2">MENU</p>
         <ul class="space-y-2">
             <li>
-                <a href="index.html" class="flex items-center gap-2 p-2 rounded-md bg-primary text-white">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 p-2 rounded-md {{ request()->routeIs('dashboard') ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-100' }}">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
             <li>
-                <a href="tambah-buku.html" class="flex items-center gap-2 p-2 rounded-md text-gray-700 hover:bg-gray-100">
+                <a href="{{ route('books.index') }}" class="flex items-center gap-2 p-2 rounded-md {{ request()->routeIs('books.index') ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+                    <i class="fas fa-book"></i>
+                    <span>Buku</span>
+                </a>
+            </li>
+            
+            @if(Auth::user()->isAdmin())
+            <li>
+                <a href="{{ route('books.create') }}" class="flex items-center gap-2 p-2 rounded-md {{ request()->routeIs('books.create') ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-100' }}">
                     <i class="fas fa-plus"></i>
                     <span>Tambah Buku</span>
                 </a>
             </li>
-            <li>
-                <a href="pengaturan.html" class="flex items-center gap-2 p-2 rounded-md text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-cog"></i>
-                    <span>Pengaturan</span>
-                </a>
-            </li>
+            @endif
         </ul>
     </nav>
     
     <div class="p-4 border-t">
-        <a href="login.html" class="flex items-center gap-2 p-2 rounded-md text-gray-700 hover:bg-gray-100">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Logout</span>
-        </a>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="flex items-center gap-2 p-2 rounded-md text-gray-700 hover:bg-gray-100 w-full text-left">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </form>
     </div>
 </aside>
