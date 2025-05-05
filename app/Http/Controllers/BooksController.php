@@ -17,7 +17,7 @@ class BooksController extends Controller
     {
         $this->middleware('auth');
         // Only admin can create, update, delete books
-        $this->middleware('admin')->only(['create', 'store', 'edit', 'update', 'destroy']);
+        // $this->middleware('admin')->only(['create', 'store', 'edit', 'destroy']);
     }
 
     /**
@@ -34,6 +34,10 @@ class BooksController extends Controller
      */
     public function create()
     {
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->route('books.index')
+                ->with('error', 'Anda tidak memiliki akses untuk halaman ini.');
+        }
         return view('books.create');
     }
 
@@ -42,6 +46,11 @@ class BooksController extends Controller
      */
     public function store(Request $request)
     {
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->route('books.index')
+                ->with('error', 'Anda tidak memiliki akses untuk operasi ini.');
+        }
+    
         $request->validate([
             'name' => 'required|string|max:255',
             'publisher' => 'required|string|max:255',
@@ -69,6 +78,11 @@ class BooksController extends Controller
      */
     public function edit(Books $book)
     {
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->route('books.index')
+                ->with('error', 'Anda tidak memiliki akses untuk operasi ini.');
+        }
+    
         return view('books.edit', compact('book'));
     }
 
@@ -77,6 +91,11 @@ class BooksController extends Controller
      */
     public function update(Request $request, Books $book)
     {
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->route('books.index')
+                ->with('error', 'Anda tidak memiliki akses untuk operasi ini.');
+        }
+    
         $request->validate([
             'name' => 'required|string|max:255',
             'publisher' => 'required|string|max:255',
@@ -96,6 +115,11 @@ class BooksController extends Controller
      */
     public function destroy(Books $book)
     {
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->route('books.index')
+                ->with('error', 'Anda tidak memiliki akses untuk operasi ini.');
+        }
+    
         $book->delete();
 
         return redirect()->route('books.index')

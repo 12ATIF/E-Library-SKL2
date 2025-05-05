@@ -26,21 +26,19 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 // Books Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/', [BooksController::class, 'index'])->name('books.index');
-    
-    // Rute yang hanya bisa diakses admin
-    Route::middleware('admin')->group(function () {
-        Route::get('/books/create', [BooksController::class, 'create'])->name('books.create');
-        Route::post('/books', [BooksController::class, 'store'])->name('books.store');
-        Route::get('/books/{book}/edit', [BooksController::class, 'edit'])->name('books.edit');
-        Route::put('/books/{book}', [BooksController::class, 'update'])->name('books.update');
-        Route::delete('/books/{book}', [BooksController::class, 'destroy'])->name('books.destroy');
-    });
-    
-    // Rute yang bisa diakses semua user
+    // Semua rute yang memerlukan autentikasi
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/books', [BooksController::class, 'index'])->name('books.index');
     Route::get('/books/{book}', [BooksController::class, 'show'])->name('books.show');
+    
+    // Lakukan pemeriksaan role admin di controller, bukan dengan middleware
+    Route::get('/books/create', [BooksController::class, 'create'])->name('books.create');
+    Route::post('/books', [BooksController::class, 'store'])->name('books.store');
+    Route::get('/books/{book}/edit', [BooksController::class, 'edit'])->name('books.edit');
+    Route::put('/books/{book}', [BooksController::class, 'update'])->name('books.update');
+    Route::delete('/books/{book}', [BooksController::class, 'destroy'])->name('books.destroy');
 });
 
 // Redirect to books.index by default
 Route::redirect('/', '/books');
+
