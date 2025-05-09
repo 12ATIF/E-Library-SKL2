@@ -24,7 +24,7 @@
         <h2 class="text-lg font-medium">Form Edit Buku</h2>
     </div>
     <div class="p-4 sm:p-6">
-        <form action="{{ route('books.update', $book) }}" method="POST" class="space-y-4 sm:space-y-6">
+        <form action="{{ route('books.edits', $book) }}" method="POST" class="space-y-4 sm:space-y-6">
             @csrf
             @method('PUT')
             

@@ -19,11 +19,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    // Daftarkan route publik
+    // Daftarkan rute untuk books
     Route::get('/books', [BooksController::class, 'index'])->name('books.index');
-    Route::get('/books/{book}', [BooksController::class, 'show'])->name('books.show');
     
-    // Daftarkan route admin dengan middleware admin
+    // Penting: rute /books/create harus didefinisikan SEBELUM /books/{book}
     Route::middleware('admin')->group(function() {
         Route::get('/books/create', [BooksController::class, 'create'])->name('books.create');
         Route::post('/books', [BooksController::class, 'store'])->name('books.store');
@@ -31,6 +30,9 @@ Route::middleware('auth')->group(function () {
         Route::put('/books/{book}', [BooksController::class, 'update'])->name('books.update');
         Route::delete('/books/{book}', [BooksController::class, 'destroy'])->name('books.destroy');
     });
+    
+    // Letakkan rute show SETELAH rute spesifik seperti create dan edit
+    Route::get('/books/{book}', [BooksController::class, 'show'])->name('books.show');
 });
 
 Route::redirect('/', '/books');
